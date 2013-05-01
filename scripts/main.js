@@ -16,13 +16,20 @@ roomIDs = window.localStorage.getItem("roomID");
 dataRef = new Firebase(firebaseRef + "/rooms/" + roomIDs);
 
 // get the current name of the user //
-dataRef.push({name: currentName, uri: "has joined the room!", curtime: 0});
+dataRef.push({name: currentName, uri: "#J#"});
 
 // make sure we add a message to our spotify whenever we recieve one on firebase
 dataRef.limit(1).on('child_added', function(snapshot)
 {
     var message = snapshot.val();
-    displayChatMessage(message.name, message.uri);
+    if(message.uri == "#J#")
+    {
+        displayChatMessage(message.name, "Has joined the room!");
+    }
+    else
+    {
+        displayChatMessage(message.name, message.uri);
+    }
 });
 
 // update our info
