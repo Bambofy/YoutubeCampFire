@@ -27,13 +27,13 @@ dataRef.limit(1).on('child_added', function(snapshot)
     {
         headCount = headCount + 1;
         displayChatMessage(message.name, "Has joined the room!");
-        $("#footz").text("Created by Richard Bamford - " + headCount + " in this room");
+        $("#headcount").text(headCount);
     }
     else if(message.uri == "#E#")
     {
         headCount = headCount - 1;
         displayChatMessage(message.name, "Has left the room...");
-        $("#footz").text("Created by Richard Bamford - " + headCount + " in this room");
+        $("#headcount").text(headCount);
     }
     else
     {
@@ -42,19 +42,22 @@ dataRef.limit(1).on('child_added', function(snapshot)
 });
 
 window.onbeforeunload = confirmExit;
+
 function confirmExit()
 {
     // tell firebase we left
     dataRef.push({name: currentName, uri: "#E#"});
+
+    if (headCount == 1) // last person out is a rotten egg
+    {
+        dataRef.remove();
+    }
 
     return "You have attempted to leave this page.  Please remember the room name if you wish to re-join.  Are you sure you want to exit this page?";
 }
 
 // update our info
 $("#tag").text(roomIDs);
-
-// delete room on disconnect
-dataRef.onDisconnect().remove(function(e) {});
 
 // this is where we handle all our requests
 function displayChatMessage(name, text)
