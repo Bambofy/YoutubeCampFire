@@ -56,7 +56,7 @@
                 <center>
                     <a href="#" class="button prefix" onclick="runClick();" style="width: 100px;">Submit</a>
                 </center>
-                <!-- <label><a href="javascript:void(0);" onclick="toggleHelp();">toggle help</a></label> -->
+                <label>Created by Richard Bamford</label>
             </div>
         </div>
         <br />
@@ -64,19 +64,6 @@
     </div>
 
     <script type="text/javascript">
-        function toggleHelp()
-        {
-            // make sure we don't get any nasty flashing
-            if($("#help").length > 0)
-            {
-                $("#help").remove();
-            }
-            else
-            {
-                $("#content").append("<div id='help'><div class='row'><dl><dt>Sharing rooms</dt><dd>To share this room, give the person it's name (shown inside the green box) and enter as normal into the apps main page textbox.</dd><dt>Room controls</dt><dd>Here you can play songs to everyone by copy and pasting (ctrl+c and ctrl+v) the song URI into the message input box. To get a song URI, right click the song in spotify and select the 'Copy Spotify URI' or 'Copy HTTP Link'</dd></dl></div></div>");
-            }
-        }
-
         $().ready(function(){
             var videoID = "0jbPstJ-5bY"
             // Lets Flash from another domain call JavaScript
@@ -89,7 +76,7 @@
         });
 
         function onPlayerError(e) {
-            alert("hello" + e);
+            alert("ERROR:" + e);
         }
 
         function onYouTubePlayerReady(playerId) {

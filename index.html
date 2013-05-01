@@ -37,7 +37,7 @@
                 <input type="text" id="createRoomInputName" placeholder="Name..." />
                 <input type="text" id="createRoomInput" placeholder="Type room name here..." />
             </div>
-            <label><a href="javascript:void(0);" onclick="toggleHelp();">toggle help - created by Richard Bamford</a></label>
+            <label>Created by Richard Bamford</label>
         </div>
 
         <br />
@@ -63,19 +63,6 @@
                 window.location.href = "room.html";
             }
         });
-
-        function toggleHelp()
-        {
-            // make sure we don't get any nasty flashing
-            if($("#help").length > 0)
-            {
-                $("#help").remove();
-            }
-            else
-            {
-                $("#content").append("<div id='help'><div class='row'><dl><dt>Creating rooms</dt><dd>Creating a room is as easy as entering the desired name into the textbox above and pressing enter!</dd><dt>Joining rooms</dt><dd>To join a room, type the room name into the textbox above and hit enter.</dd><dt>Room controls</dt><dd>Once inside a room you can play songs to everyone by copy and pasting (ctrl+c and ctrl+v) the song URI into the message input box. To get a song URI, right click the song in spotify and select the 'Copy Spotify URI' or 'Copy HTTP Link'</dd></dl></div></div>");
-            }
-        }
 
     </script>
     <script src="scripts/foundation.min.js"></script>
