@@ -6,6 +6,7 @@ firebaseRef = "https://spotifycampfire.firebaseio.com";
 currentName = window.localStorage.getItem("username");
 currentSongUri = "";   // used to make sure we don't play the same song twice.
 messageCount = 0;
+headCount = 0;
 
 var wsImpl = window.WebSocket || window.MozWebSocket;
 
@@ -24,7 +25,15 @@ dataRef.limit(1).on('child_added', function(snapshot)
     var message = snapshot.val();
     if(message.uri == "#J#")
     {
+        headCount = headCount + 1;
         displayChatMessage(message.name, "Has joined the room!");
+        $("#footz").text("Created by Richard Bamford - " + headCount + " in this room");
+    }
+    else if(message.uri == "#E#")
+    {
+        headCount = headCount - 1;
+        displayChatMessage(message.name, "Has left the room...");
+        $("#footz").text("Created by Richard Bamford - " + headCount + " in this room");
     }
     else
     {
@@ -32,11 +41,20 @@ dataRef.limit(1).on('child_added', function(snapshot)
     }
 });
 
+window.onbeforeunload = confirmExit;
+function confirmExit()
+{
+    // tell firebase we left
+    dataRef.push({name: currentName, uri: "#E#"});
+
+    return "You have attempted to leave this page.  Please remember the room name if you wish to re-join.  Are you sure you want to exit this page?";
+}
+
 // update our info
 $("#tag").text(roomIDs);
 
 // delete room on disconnect
-dataRef.onDisconnect().remove();
+dataRef.onDisconnect().remove(function(e) {});
 
 // this is where we handle all our requests
 function displayChatMessage(name, text)
