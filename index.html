@@ -36,6 +36,7 @@
             <div class="large-10 large-centered columns text-center">
                 <input type="text" id="createRoomInputName" placeholder="Name..." />
                 <input type="text" id="createRoomInput" placeholder="Type room name here..." />
+                <button onclick="openRoom()">Enter</button>
             </div>
             <label><a href="http://bambofy.com">Created by Richard Bamford</a></label>
         </div>
@@ -53,6 +54,12 @@
         {
             if (e.keyCode == 13)
             {
+                openRoom();
+            }
+        });
+
+        function openRoom()
+        {
                 var name = $('#createRoomInput').val();
                 var username = $('#createRoomInputName').val();
 
@@ -61,8 +68,7 @@
                 window.localStorage.setItem("username", username);
                 // redirect
                 window.location.href = "room.html";
-            }
-        });
+        }
 
     </script>
     <script src="scripts/foundation.min.js"></script>
