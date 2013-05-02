@@ -4,7 +4,6 @@ firebaseRef = "https://spotifycampfire.firebaseio.com";
 
 // when song is parsed on C#, make it message back the name. When the message is recieved on this page we can just print the name out as usual.
 currentName = window.localStorage.getItem("username");
-currentSongUri = "";   // used to make sure we don't play the same song twice.
 messageCount = 0;
 headCount = 0;
 
@@ -96,7 +95,6 @@ function displayChatMessage(name, text)
     if (flag == "t")
     {
         playSong(text);
-        currentSongUri = text;
         $('#messagesDiv').append("<div><b>" + name + "</b> played a video<br /></div>");
     }
     else if (flag == "m")
@@ -125,14 +123,7 @@ function runClick()
     {
         if(isTrack(text))    // if it's a track make sure it's not a duplicate
         {
-            if(currentSongUri != text)  // make sure it's not the same song
-            {
-                dataRef.push({name: currentName, uri: strip(text)});               
-            }
-            else
-            {
-                CAlert("That song is already playing!", "red");
-            }
+            dataRef.push({name: currentName, uri: strip(text)});               
         }
         else                        // else it's just some text
         {
