@@ -8,8 +8,6 @@ currentSongUri = "";   // used to make sure we don't play the same song twice.
 messageCount = 0;
 headCount = 0;
 
-var ytQueue = new Array();
-
 var wsImpl = window.WebSocket || window.MozWebSocket;
 
 // get the roomID we want to join/create
@@ -97,18 +95,9 @@ function displayChatMessage(name, text)
     // Flag handling
     if (flag == "t")
     {
-        if(ytQueue[0] == null)    //check if Q is empty
-        {
-            ytQueue[0] = text;
-            playSong(text);
-            currentSongUri = text;
-            $('#messagesDiv').append("<div><b>" + name + "</b> played a video<br /></div>");
-        }else       //if Q is not empty add to end of array
-        {
-            $('#messagesDiv').append("<div><b>" + name + "</b> added a video to the queue<br /></div>");
-            ytQueue.push(text);
-        }
-
+        playSong(text);
+        currentSongUri = text;
+        $('#messagesDiv').append("<div><b>" + name + "</b> played a video<br /></div>");
     }
     else if (flag == "m")
     {
@@ -167,18 +156,3 @@ $("#messageInput").keypress(function(e)
         runClick();
     }
 });
-
-
-
-function onytplayerStateChange(newState) {
-    // Video has ended - play next video in queue
-    if(newState == 0){
-        //check if queue is empty
-        if(ytQueue[0] != ""){
-            //.shift dat array
-            ytQueue.shift();
-            //play video at [0]
-            playSong(ytQueue[0]);
-        }
-    }
-}
