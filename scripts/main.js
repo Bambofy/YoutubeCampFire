@@ -22,7 +22,7 @@ dataRef.push({name: currentName, uri: "#J#"});
 
 //----------------- Headcounting code ----------------//
 // reference to headcount, we have to use a ifference reference or else our child_added callback breaks...
-headcountRef = new Firebase("https://spotifycampfire.firebaseio.com/roomheadcounts/"+roomIDs+"/headcount");
+headcountRef = new Firebase("https://spotifycampfire.firebaseio.com/roominfo/"+roomIDs+"/headcount");
 headcountRef.transaction(function(current_value) {
     headCount = headCount + 1;
     return current_value + 1;
@@ -33,24 +33,17 @@ headcountRef.on('value', function(dataSnapshot) {
 });
 //-----------------------------------------------------//
 
+//----------------- Number of messages counter -------//
+// todo
+//-----------------------------------------------------//
+
 
 
 // make sure we add a message to our spotify whenever we recieve one on firebase
 dataRef.limit(1).on('child_added', function(snapshot)
 {
     var message = snapshot.val();
-    if(message.uri == "#J#")
-    {
-        displayChatMessage(message.name, "Has joined the room!");
-    }
-    else if(message.uri == "#E#")
-    {
-        displayChatMessage(message.name, "Has left the room...");
-    }
-    else
-    {
-        displayChatMessage(message.name, message.uri);
-    }
+    displayChatMessage(message.name, message.uri);
 });
 
 
@@ -58,24 +51,24 @@ window.onbeforeunload = confirmExit;
 function confirmExit()
 {
     dataRef.push({name: currentName, uri: "#E#"});
+
     // reference to headcount
     headcountRef.transaction(function(current_value) {
         headCount = headCount - 1;
+
+        if (headCount <= 0)     // last person out is a rotten egg, if it's 1 that means its just me, we check for all below just bc im funny
+        {
+            dataRef.remove();
+            headcountRef.remove();
+        }
+
         return current_value - 1;
     });
-
-    if (headCount == 0)     // last person out is a rotten egg
-    {
-        dataRef.remove();
-        headcountRef.remove();
-    }
 }
-
 
 
 // update our info
 $("#tag").text(roomIDs);
-
 
 
 
@@ -90,17 +83,45 @@ function displayChatMessage(name, text)
     {
         flag = "t";
     }
+    if (isCommand(text))
+    {
+        // p = pause, r = resume
+        flag = text;
+    }
 
     // Flag handling
     if (flag == "t")
     {
-        playSong(text);
+        playVideo(text);
+        messageCount = messageCount + 1;        // do this whenveer we post a message
         $('#messagesDiv').append("<div><b>" + name + "</b> played a video<br /></div>");
     }
     else if (flag == "m")
     {
         messageCount = messageCount + 1;
         $('#messagesDiv').append("<div><b>" + name + "</b>: <em>" + text + "</em><br /></div>");
+    }
+    else if (flag == "#E#")
+    {
+        messageCount = messageCount + 1;
+        $('#messagesDiv').append("<div><b>" + name + " has left the room...</b><br /></div>");
+    }
+    else if (flag == "#J#")
+    {
+        messageCount = messageCount + 1;
+        $('#messagesDiv').append("<div><b>" + name + " has joined the room!</b><br /></div>");
+    }
+    else if (flag == "#P#")
+    {
+        pauseVideo();
+        messageCount = messageCount + 1;
+        $('#messagesDiv').append("<div><b>" + name + "</b> paused the video<br /></div>");
+    }
+    else if (flag == "#R#")
+    {
+        resumeVideo();
+        messageCount = messageCount + 1;
+        $('#messagesDiv').append("<div><b>" + name + "</b> resumed the video<br /></div>");        
     }
 
     // removing older messages

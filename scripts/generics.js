@@ -10,8 +10,21 @@ function isTrack(text)
     }
 }
 
-function playSong(uri)
+function isCommand(text)
 {
+  if (text.charAt(0) == "#" && text.charAt(2) == "#" && text.length == 3)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+function playVideo(uri)
+{
+  // get the uri
   var video_id = uri.split('v=')[1];
   var ampersandPosition = video_id.indexOf('&');
   if(ampersandPosition != -1) {
@@ -20,6 +33,18 @@ function playSong(uri)
 
   ytplayer = document.getElementById("ytPlayer");
   ytplayer.loadVideoById(video_id);
+}
+
+function pauseVideo()
+{
+  ytplayer = document.getElementById("ytPlayer");
+  ytplayer.pauseVideo();
+}
+
+function resumeVideo()
+{
+  ytplayer = document.getElementById("ytPlayer");
+  ytplayer.playVideo(); 
 }
 
 function CAlert(text, colour)
@@ -33,3 +58,32 @@ function strip(html)
    tmp.innerHTML = html;
    return tmp.textContent||tmp.innerText;
 }
+
+/*
+
+
+This player is not pretty or useful in itself, it's just there to illustrate the YouTube JavaScript Player API.   >>More about this...
+Look at the source code for this page to see how it's done. Some things you can use:
+
+ytplayer.loadVideoById(id, startSeconds);
+ytplayer.cueVideoById(id, startSeconds);
+ytplayer.playVideo();
+ytplayer.pauseVideo();
+ytplayer.stopVideo();
+ytplayer.getState();
+ytplayer.seekTo(seconds, true);
+ytplayer.getVideoBytesLoaded();
+ytplayer.getVideoBytesTotal();
+ytplayer.getCurrentTime();
+ytplayer.getDuration();
+ytplayer.getVideoStartBytes();
+ytplayer.mute();
+ytplayer.unMute();
+ytplayer.getVideoEmbedCode()
+ytplayer.getVideoUrl();
+ytplayer.setVolume(newVolume);
+ytplayer.getVolume();
+ytplayer.clearVideo();
+
+
+*/
