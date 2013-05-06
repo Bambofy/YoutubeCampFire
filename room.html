@@ -80,11 +80,7 @@
         }
 
         function onYouTubePlayerReady(playerId) {
-
             ytplayer = document.getElementById("ytPlayer");
-
-            //ytplayer.addEventListener("onStateChange", "onytplayerStateChange");
-            
             ytplayer.addEventListener("onError", "onPlayerError");
         }
 
