@@ -35,18 +35,6 @@ function playVideo(uri)
   ytplayer.loadVideoById(video_id);
 }
 
-function pauseVideo()
-{
-  ytplayer = document.getElementById("ytPlayer");
-  ytplayer.pauseVideo();
-}
-
-function resumeVideo()
-{
-  ytplayer = document.getElementById("ytPlayer");
-  ytplayer.playVideo(); 
-}
-
 function CAlert(text, colour)
 {
   $('#messagesDiv').append("<div><b style='color: " + colour + ";'>" + text + "</b></div>");

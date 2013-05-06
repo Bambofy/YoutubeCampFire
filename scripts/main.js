@@ -22,7 +22,7 @@ dataRef.push({name: currentName, uri: "#J#"});
 
 //----------------- Headcounting code ----------------//
 // reference to headcount, we have to use a ifference reference or else our child_added callback breaks...
-headcountRef = new Firebase("https://spotifycampfire.firebaseio.com/roominfo/"+roomIDs+"/headcount");
+var headcountRef = new Firebase("https://spotifycampfire.firebaseio.com/roominfo/"+roomIDs+"/headcount");
 headcountRef.transaction(function(current_value) {
     headCount = headCount + 1;
     return current_value + 1;
@@ -32,6 +32,23 @@ headcountRef.on('value', function(dataSnapshot) {
     $("#headcount").text(dataSnapshot.val());
 });
 //-----------------------------------------------------//
+
+
+
+//----------------- On join start video code ----------------//
+// grab the current value in the firebase
+var startVidRef = new Firebase("https://spotifycampfire.firebaseio.com/roominfo/"+roomIDs+"/currentvideo");
+startVidRef.once('value', function(dataSnapshot)
+{
+    if (dataSnapshot.val() != null)
+    {
+        // firebase exists
+        playVideo(dataSnapshot.val());
+    }
+});
+//-----------------------------------------------------//
+
+
 
 //----------------- Number of messages counter -------//
 // todo
@@ -52,18 +69,20 @@ function confirmExit()
 {
     dataRef.push({name: currentName, uri: "#E#"});
 
-    // reference to headcount
+    var headcountRef = new Firebase("https://spotifycampfire.firebaseio.com/roominfo/"+roomIDs+"/headcount");
     headcountRef.transaction(function(current_value) {
         headCount = headCount - 1;
-
-        if (headCount <= 0)     // last person out is a rotten egg, if it's 1 that means its just me, we check for all below just bc im funny
-        {
-            dataRef.remove();
-            headcountRef.remove();
-        }
-
         return current_value - 1;
     });
+
+    var baseInfoRef = new Firebase("https://spotifycampfire.firebaseio.com/roominfo/"+roomIDs+"");
+
+    if (headCount <= 1)     // last person out is a rotten egg, if it's 1 that means its just me, we check for all below just bc im funny
+    {
+        dataRef.remove();
+        baseInfoRef.remove();
+    }
+
 }
 
 
@@ -85,13 +104,18 @@ function displayChatMessage(name, text)
     }
     if (isCommand(text))
     {
-        // p = pause, r = resume
+        // #p# = pause, #r# = resume
         flag = text;
     }
+
+    // SWITCH STATEMENTS SUCK YO
 
     // Flag handling
     if (flag == "t")
     {
+        var startVidRef = new Firebase("https://spotifycampfire.firebaseio.com/roominfo/"+roomIDs+"/currentvideo");
+        startVidRef.set(text);
+        
         playVideo(text);
         messageCount = messageCount + 1;        // do this whenveer we post a message
         $('#messagesDiv').append("<div><b>" + name + "</b> played a video<br /></div>");
@@ -113,13 +137,17 @@ function displayChatMessage(name, text)
     }
     else if (flag == "#P#")
     {
-        pauseVideo();
+        ytplayer = document.getElementById("ytPlayer");
+        ytplayer.pauseVideo(); 
+
         messageCount = messageCount + 1;
         $('#messagesDiv').append("<div><b>" + name + "</b> paused the video<br /></div>");
     }
     else if (flag == "#R#")
     {
-        resumeVideo();
+        ytplayer = document.getElementById("ytPlayer");
+        ytplayer.playVideo();
+
         messageCount = messageCount + 1;
         $('#messagesDiv').append("<div><b>" + name + "</b> resumed the video<br /></div>");        
     }
@@ -168,3 +196,17 @@ $("#messageInput").keypress(function(e)
         runClick();
     }
 });
+
+function pausePlayer()
+{
+    dataRef.push({name: currentName, uri: "#P#"}); 
+    ytplayer = document.getElementById("ytPlayer");
+    ytplayer.pauseVideo();
+}
+
+function resumePlayer()
+{
+    dataRef.push({name: currentName, uri: "#R#"}); 
+    ytplayer = document.getElementById("ytPlayer");
+    ytplayer.playVideo(); 
+}

@@ -64,6 +64,8 @@
     </div>
 
     <script type="text/javascript">
+        lastState = -1;
+
         $().ready(function(){
             var videoID = "0jbPstJ-5bY"
             // Lets Flash from another domain call JavaScript
@@ -87,7 +89,26 @@
 
         function onytplayerStateChange(newState)
         {
-            alert("Player's new state: " + newState);
+            // split it into this, we don't want chat spam if they have seeked. because many many events are fired.
+            if(lastState == 2 && newState == 2)
+            {
+                // skipped forward/backward in the video
+            }
+            else
+            {
+                switch (newState)
+                {
+                    case 2:                 // paused
+                        pausePlayer();          // broadcast this pause to the other clients
+                    case 1:                 // played
+                        if (lastState == 2)     // make sure we've actually paused it before resuming...
+                        {
+                            resumePlayer();
+                        }
+                }
+            }
+
+            lastState = newState;           // we use this to check if there have been 2 pauses in a row, if so then someone has seekto'd
         }
 
     </script>
