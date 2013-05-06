@@ -140,16 +140,16 @@ function displayChatMessage(name, text)
         ytplayer = document.getElementById("ytPlayer");
         ytplayer.pauseVideo(); 
 
-        messageCount = messageCount + 1;
-        $('#messagesDiv').append("<div><b>" + name + "</b> paused the video<br /></div>");
+        //messageCount = messageCount + 1;
+        //$('#messagesDiv').append("<div><b>" + name + "</b> paused the video<br /></div>");
     }
     else if (flag == "#R#")
     {
         ytplayer = document.getElementById("ytPlayer");
         ytplayer.playVideo();
 
-        messageCount = messageCount + 1;
-        $('#messagesDiv').append("<div><b>" + name + "</b> resumed the video<br /></div>");        
+        //messageCount = messageCount + 1;
+        //$('#messagesDiv').append("<div><b>" + name + "</b> resumed the video<br /></div>");        
     }
 
     // removing older messages
