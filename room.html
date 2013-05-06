@@ -82,6 +82,12 @@
         function onYouTubePlayerReady(playerId) {
             ytplayer = document.getElementById("ytPlayer");
             ytplayer.addEventListener("onError", "onPlayerError");
+            ytplayer.addEventListener("onStateChange", "onytplayerStateChange");
+        }
+
+        function onytplayerStateChange(newState)
+        {
+            alert("Player's new state: " + newState);
         }
 
     </script>
